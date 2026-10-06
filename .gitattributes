@@ -1,0 +1,2 @@
+# Exclure les cartes HTML exportées des statistiques de langage GitHub
+*.html linguist-generated=true
