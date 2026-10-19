@@ -11,7 +11,7 @@ Modèle de machine learning géospatial qui estime, pour chaque commune de Franc
 ## 🎯 Problématique
 
 Les arrêtés de catastrophe naturelle (CatNat) « inondation » montrent que certaines communes sont reconnues sinistrées bien plus souvent que d'autres.
-**Peut-on expliquer ces différences à partir du terrain (relief, humidité des sols) ? Et quelles variables comptent le plus ?**
+**Peut-on expliquer ces différences à partir du terrain (relief, humidité des sols) et des pluies extrêmes ? Et quelles variables comptent le plus ?**
 
 ## 📊 Données
 
@@ -54,6 +54,16 @@ Les coordonnées ne sont **pas** utilisées comme variables : le modèle doit ap
 - En validation spatiale, la PR-AUC est **plus du double** du hasard.
 - Ajouter les pluies extrêmes améliore la PR-AUC dans chacun des 5 groupes de départements (notebook 02).
 
+### Évolution du modèle (validation spatiale)
+
+| Version | Changement | ROC-AUC | PR-AUC |
+|---|---|---|---|
+| v1 | SWI + relief (8 variables) | 0,717 | 0,462 |
+| v2 | + pluies extrêmes (12 variables) | 0,731 | 0,496 |
+| v3 | cible corrigée, probabilités calibrées | 0,730 | 0,478 |
+
+La v3 n'est pas « moins bonne » que la v2 : la cible a changé (arrêtés dédoublonnés, communes fusionnées, 22 % de communes positives au lieu de 23,5 %), donc les PR-AUC ne se comparent pas directement. Le ROC-AUC, lui, reste stable.
+
 ## 🔍 Explicabilité (SHAP)
 
 Les valeurs SHAP sont calculées **hors échantillon** : chaque commune est expliquée par le modèle qui l'a prédite, sans avoir vu son département. L'app affiche ces contributions commune par commune.
@@ -87,6 +97,7 @@ La carte des probabilités fait ressortir le pourtour méditerranéen, le Sud-Ou
 hydraxai-france/
 ├── app/
 │   ├── app.py               # application Streamlit
+│   ├── carte_risque_v1.html # carte interactive de la v1
 │   └── requirements.txt     # dépendances de l'app
 ├── data/                    # tables préparées (parquet)
 ├── notebooks/
